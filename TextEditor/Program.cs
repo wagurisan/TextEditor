@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace TextEditorV2
+namespace TextEditor
 {
     internal class TextEditor
     {
@@ -12,7 +12,7 @@ namespace TextEditorV2
             WelcomeScreen();
             Console.Clear();
             Console.CursorVisible = true;
-            Input();
+            Input();//hello
 
         }
 
@@ -264,7 +264,6 @@ namespace TextEditorV2
                 if (UserInput.Key == ConsoleKey.Backspace)
 
                 {
-
                     if (Console.CursorLeft < 9)
                     {
                         Console.Write(" ");
