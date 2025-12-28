@@ -12,7 +12,7 @@ namespace TextEditor
             WelcomeScreen();
             Console.Clear();
             Console.CursorVisible = true;
-            Input();//hello
+            Input();
 
         }
 
@@ -47,6 +47,8 @@ namespace TextEditor
                 }
 
                 BackSpace(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
+                
+                UserMovement(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
 
                 Save(ref userInputs, ref UserInput, ref CurrentString, ref UserChosenFileName);
 
@@ -294,6 +296,14 @@ namespace TextEditor
             Console.SetCursorPosition(43, 12);
             Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
             Thread.Sleep(2200);
+        }
+
+        static void UserMovement(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
+        {
+            if (Console.ReadKey().Key == ConsoleKey.LeftArrow)
+            {
+                Console.SetCursorPosition(CurrentString.Length-1,CurrentLine);
+            }
         }
     }
 }
