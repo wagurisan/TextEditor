@@ -12,7 +12,6 @@ namespace TextEditor
             WelcomeScreen();
             Console.Clear();
             Console.CursorVisible = true;
-            Input();
 
         }
 
@@ -42,20 +41,20 @@ namespace TextEditor
                     LineCounter++; // increment line counter
                     CurrentLine++; // increment currentline counter
                     Console.Write("\n");
-                    Console.Write($" {string.Concat(Enumerable.Repeat(" ", 4 - LineCounter.ToString().Length))}{LineCounter}  ❚ "); // write the line number when enter is pressed
+                    Console.Write(
+                        $" {string.Concat(Enumerable.Repeat(" ", 4 - LineCounter.ToString().Length))}{LineCounter}  ❚ "); // write the line number when enter is pressed
                     CurrentString = "";
                 }
 
                 BackSpace(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
-                
-                UserMovement(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
 
                 Save(ref userInputs, ref UserInput, ref CurrentString, ref UserChosenFileName);
 
             }
         }
 
-        static void Save(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref string UserChosenFileName)
+        static void Save(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString,
+            ref string UserChosenFileName)
         {
 
             if (UserInput.Key == ConsoleKey.Escape)
@@ -146,7 +145,7 @@ namespace TextEditor
 
                     }
 
-                    Console.SetCursorPosition(userInputs[CurrentLine-1].Length + 9, LineCounter - 2);
+                    Console.SetCursorPosition(userInputs[CurrentLine - 1].Length + 9, LineCounter - 2);
 
                 }
 
@@ -171,7 +170,7 @@ namespace TextEditor
                 catch (IOException LoadException) //will potentially add an error readme with error details.
                 {
                     Console.Clear();
-                    Console.ForegroundColor= ConsoleColor.DarkRed;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("-- FILE LOAD ERROR -- ERROR CODE 0x01");
                     Console.WriteLine();
                     Console.WriteLine(LoadException.Message);
@@ -183,7 +182,7 @@ namespace TextEditor
                     Console.CursorVisible = true;
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.Clear();
-                    
+
                     Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
                 }
 
@@ -239,7 +238,8 @@ namespace TextEditor
             }
         }
 
-        static void BackSpace(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
+        static void BackSpace(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString,
+            ref int CurrentLine, ref int LineCounter)
         {
             int CurrentStringLength = CurrentString.Length;
 
@@ -296,14 +296,6 @@ namespace TextEditor
             Console.SetCursorPosition(43, 12);
             Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
             Thread.Sleep(2200);
-        }
-
-        static void UserMovement(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
-        {
-            if (Console.ReadKey().Key == ConsoleKey.LeftArrow)
-            {
-                Console.SetCursorPosition(CurrentString.Length-1,CurrentLine);
-            }
         }
     }
 }
