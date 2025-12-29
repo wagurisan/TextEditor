@@ -45,7 +45,7 @@ namespace TextEditor
                     Console.Write($" {string.Concat(Enumerable.Repeat(" ", 4 - LineCounter.ToString().Length))}{LineCounter}  ❚ "); // write the line number when enter is pressed
                     CurrentString = "";
                 }
-
+                
                 BackSpace(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
                 
                 UserMovement(ref userInputs, ref UserInput, ref CurrentString, ref CurrentLine, ref LineCounter);
@@ -283,7 +283,6 @@ namespace TextEditor
                     }
                 }
             }
-
         }
 
         static void WelcomeScreen()
@@ -300,11 +299,21 @@ namespace TextEditor
 
         static void UserMovement(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
         {
-            if (Console.ReadKey().Key == ConsoleKey.LeftArrow)
+            int CurrentCharacterPosition = 0;
+            if (Console.CursorLeft != 9)
             {
-                Console.SetCursorPosition(CurrentString.Length-1,CurrentLine);
-                
+                if (UserInput.Key == ConsoleKey.LeftArrow)
+                {
+                    CurrentCharacterPosition = userInputs[CurrentString.Length].Length;
+                    Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                }
             }
+
+            if (UserInput.Key == ConsoleKey.RightArrow)
+            {
+                Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+            }
+
         }
     }
 }
