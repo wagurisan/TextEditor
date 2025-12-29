@@ -303,6 +303,7 @@ namespace TextEditor
             if (Console.ReadKey().Key == ConsoleKey.LeftArrow)
             {
                 Console.SetCursorPosition(CurrentString.Length-1,CurrentLine);
+                
             }
         }
     }
