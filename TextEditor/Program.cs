@@ -12,7 +12,7 @@ namespace TextEditor
             WelcomeScreen();
             Console.Clear();
             Console.CursorVisible = true;
-
+            Input();
         }
 
         static List<string> Input()
