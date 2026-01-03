@@ -2,12 +2,15 @@
 
 namespace TextEditor
 {
+    
     internal class TextEditor
     {
+        
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            //Console.SetWindowSize(200,200);
+            Console.SetWindowSize(160,40);
+            //Console.SetBufferSize(9999,9999);
             Console.ForegroundColor = ConsoleColor.DarkGray;
             WelcomeScreen();
             Console.Clear();
@@ -22,13 +25,19 @@ namespace TextEditor
 
             string CurrentString = "";
 
+            string Message = "";
+            
+            int BoxDrawPositionY = 0;
+
             int LineCounter = 1; // variable for the line number
 
             int CurrentLine = 0;
 
             string UserChosenFileName = "";
 
-            Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
+            Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName, ref  Message, ref  BoxDrawPositionY);
+            
+            Console.CursorVisible = true;
 
             while (true)
             {
@@ -67,20 +76,20 @@ namespace TextEditor
 
                 Random SaveTime = new Random();
 
-                int RandomTime = SaveTime.Next(1000, 1500);
+                int RandomTime = SaveTime.Next(1000, 1300);
 
                 Console.CursorVisible = false;
-                Console.SetCursorPosition(100, 0);
+                Console.SetCursorPosition(150, 0);
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.Write("Saving...");
                 Thread.Sleep(RandomTime);
-                Console.SetCursorPosition(100, 0);
+                Console.SetCursorPosition(150, 0);
                 Console.Write("         ");
-                Console.SetCursorPosition(100, 0);
+                Console.SetCursorPosition(150, 0);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.Write("Saved");
-                Thread.Sleep(1000);
-                Console.SetCursorPosition(100, 0);
+                Thread.Sleep(750);
+                Console.SetCursorPosition(150, 0);
                 Console.Write("         ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.SetCursorPosition(PreSaveX, PreSaveY);
@@ -114,11 +123,14 @@ namespace TextEditor
             }
         }
 
-        static void Load(ref List<string> userInputs, ref string CurrentString, ref int LineCounter,
-            ref int CurrentLine, ref string UserChosenFileName)
+        static void Load(ref List<string> userInputs, ref string CurrentString, ref int LineCounter, ref int CurrentLine, ref string UserChosenFileName, ref string Message, ref int BoxDrawPositionY)
         {
-            Console.WriteLine("Would you like to load a file? (filename.txt) (yes or no)");
+            Message = " Would you like to load a file? (yes/no) ";
+            UserLoadUI(ref Message, ref BoxDrawPositionY);
+            
+            UserInputUI(ref BoxDrawPositionY);
             string Answer = Console.ReadLine().Trim();
+            
 
             if (Answer == "yes")
             {
@@ -126,12 +138,20 @@ namespace TextEditor
                 try
                 {
                     Console.Clear();
-                    Console.WriteLine("Whats the File Path?");
+                    
+                    Message = " Whats the File Path? ";
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    
+                    UserInputUI(ref BoxDrawPositionY);
                     UserChosenFileName = Console.ReadLine().Trim();
                     userInputs = File.ReadAllLines(UserChosenFileName).ToList();
                     Console.Clear();
-                    Console.WriteLine("Loaded...");
-                    Thread.Sleep(1000);
+
+                    Message = " Loaded... " ;
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    
+                    Thread.Sleep(750);
                     Console.Clear();
 
                     foreach (string StringLine in userInputs)
@@ -145,8 +165,11 @@ namespace TextEditor
                         CurrentLine++;
 
                     }
+                    
+                    
 
                     Console.SetCursorPosition(userInputs[CurrentLine-1].Length + 9, LineCounter - 2);
+                    
 
                 }
 
@@ -158,14 +181,14 @@ namespace TextEditor
                     Console.WriteLine();
                     Console.WriteLine(FileNamingException.Message);
                     Console.CursorVisible = false;
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1200);
                     Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("Press Any Key to continue...");
                     Console.ReadKey();
                     Console.Clear();
                     Console.CursorVisible = true;
-                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
+                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName, ref Message, ref BoxDrawPositionY);
                 }
 
                 catch (IOException LoadException) //will potentially add an error readme with error details.
@@ -176,7 +199,8 @@ namespace TextEditor
                     Console.WriteLine();
                     Console.WriteLine(LoadException.Message);
                     Console.CursorVisible = false;
-                    Thread.Sleep(2000);
+                    Console.WriteLine("");
+                    Thread.Sleep(1200);
                     Console.WriteLine("Press Any Key to continue...");
                     Console.ReadKey();
                     Console.Clear();
@@ -184,39 +208,55 @@ namespace TextEditor
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.Clear();
                     
-                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
+                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName, ref Message, ref BoxDrawPositionY);
                 }
 
             }
 
             if (Answer != "yes" && Answer != "no")
             {
+                Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Please choose from one of the options -- yes or no --");
-                Thread.Sleep(2000);
-                Console.WriteLine();
+
+                Message = " Please choose from one of the options -- yes or no -- ";
+                UserLoadUI(ref Message, ref BoxDrawPositionY);
+                Thread.Sleep(1000);
+                
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("Press Any Key to continue...");
+
+                Message = " Press Any Key to continue... ";
+                BoxDrawPositionY = 5;
+                UserLoadUI(ref Message, ref BoxDrawPositionY);
+                
                 Console.ReadKey();
                 Console.Clear();
-                Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
+                Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName, ref Message, ref BoxDrawPositionY);
             }
 
             if (Answer == "no")
             {
                 string UserChoice = "";
                 Console.Clear();
-                Console.WriteLine("Would you like to create a new file? (yes or no)");
+
+                Message = " Would you like to create a new file? (yes or no) ";
+                UserLoadUI(ref Message, ref BoxDrawPositionY);
+                UserInputUI(ref BoxDrawPositionY);
                 UserChoice = Console.ReadLine().Trim();
                 Console.Clear();
 
                 if (UserChoice == "yes")
                 {
-                    Console.WriteLine("Please enter the desired file name...");
+                    Message = " Please enter the desired file name... ";
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    UserInputUI(ref BoxDrawPositionY);
                     UserChosenFileName = Console.ReadLine().Trim();
                     Console.Clear();
-                    Console.WriteLine("Created...");
-                    Thread.Sleep(600);
+
+                    Message = " Created... ";
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    
+                    Thread.Sleep(400);
                     Console.Clear();
                     Console.Write("    1  ❚ "); // displays the current line number
                 }
@@ -225,18 +265,80 @@ namespace TextEditor
                 {
                     Console.CursorVisible = false;
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("Please choose from at least one of the options -- Load or Create --");
-                    Thread.Sleep(2000);
-                    Console.WriteLine();
+
+                    Message = " Please choose from at least one of the options -- Load or Create -- ";
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    
+                    Thread.Sleep(1000);
                     Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.WriteLine("Press Any Key to continue...");
+                    
+                    Message = " Press Any Key to continue... ";
+                    BoxDrawPositionY = 5;
+                    UserLoadUI(ref Message, ref BoxDrawPositionY);
+                    
                     Console.ReadKey();
                     Console.Clear();
                     Console.CursorVisible = true;
                     Console.Clear();
-                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName);
+                    Load(ref userInputs, ref CurrentString, ref LineCounter, ref CurrentLine, ref UserChosenFileName, ref Message, ref BoxDrawPositionY);
                 }
             }
+        }
+        
+        static void UserLoadUI(ref string Message, ref int BoxDrawPositionY) //nearly finished
+        {
+            
+            //string Message = Message; // spaces to account for the foreach loop
+            
+            Console.CursorVisible = false;
+            
+            Console.SetCursorPosition((160-Message.Length)/2,BoxDrawPositionY+8);
+            Console.Write("┏");
+            
+            foreach (char character in Message)
+            {
+                Console.Write("━");
+            }
+            Console.Write("┓");
+            
+            Console.SetCursorPosition((160-Message.Length)/2,BoxDrawPositionY+9);
+            Console.Write($"┃{Message}┃");
+            
+            Console.SetCursorPosition((160-Message.Length)/2, BoxDrawPositionY+10);
+            Console.Write("┗");
+            
+            BoxDrawPositionY = 0;
+            
+            foreach (char character in Message)
+            {
+                Console.Write("━");
+            }
+            Console.Write("┛");
+            
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            
+            
+        }
+
+        static void UserInputUI(ref int BoxDrawPositionY)
+        {
+            Console.CursorVisible = false;
+            
+            Console.SetCursorPosition((160-20)/2,BoxDrawPositionY+13);
+            Console.Write(" ┏━━━━━━━━━━━━━━━━━━━┓ ");
+            
+            Console.SetCursorPosition((160-20)/2,BoxDrawPositionY+14);
+            Console.Write(" ┃                   ┃ ");
+            
+            Console.SetCursorPosition((160-20)/2, BoxDrawPositionY+15);
+            Console.Write(" ┗━━━━━━━━━━━━━━━━━━━┛");
+            
+            Console.SetCursorPosition(((160-20)/2)+2, BoxDrawPositionY+14);
+            Console.CursorVisible = true;
+            
+            BoxDrawPositionY = 0;
+            
+            Console.ForegroundColor = ConsoleColor.DarkGray;
         }
 
         static void BackSpace(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
@@ -288,23 +390,24 @@ namespace TextEditor
         static void WelcomeScreen()
         {
             Console.CursorVisible = false;
-            Console.SetCursorPosition(43, 10);
+            Console.SetCursorPosition(65,13);
             Console.Write("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-            Console.SetCursorPosition(43, 11);
+            Console.SetCursorPosition(65,14);
             Console.Write("┃ Welcome to the Text Editor ┃");
-            Console.SetCursorPosition(43, 12);
+            Console.SetCursorPosition(65, 15);
             Console.Write("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
-            Thread.Sleep(2200);
+            Thread.Sleep(2000);
         }
 
-        static void UserMovement(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter)
+        static void UserMovement(ref List<string> userInputs, ref ConsoleKeyInfo UserInput, ref string CurrentString, ref int CurrentLine, ref int LineCounter) //in progress
         {
-            int CurrentCharacterPosition = 0;
+            //int CurrentCharacterPosition = userInputs[CurrentString.Length].Length;
+            
             if (Console.CursorLeft != 9)
             {
                 if (UserInput.Key == ConsoleKey.LeftArrow)
                 {
-                    CurrentCharacterPosition = userInputs[CurrentString.Length].Length;
+                    //CurrentCharacterPosition--;
                     Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
                 }
             }
@@ -315,5 +418,11 @@ namespace TextEditor
             }
 
         }
+
+        static void DisplayPosition() //in progress
+        {
+            
+        }
+        
     }
 }
